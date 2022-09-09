@@ -4,6 +4,8 @@ import {Movie} from '../typings'
 import {baseUrl} from '../constants/movie'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import InfoIcon from '@mui/icons-material/Info';
+import { useRecoilState } from 'recoil';
+import { modalState, movieState } from '../atoms/modalAtom';
 
 interface Props { 
   netflixOriginals: Movie[];
@@ -13,6 +15,8 @@ function Banner({netflixOriginals}: Props) {
   // so here this means the movie is type Movie or it can be null , and by default it can be null as well
   const [movie , setMovie]  = 
   useState<Movie | null>(null)
+	const [showModal, setShowModal] = useRecoilState(modalState);
+	const [currentMovie, setCurrentMovie] = useRecoilState(movieState);
 
   useEffect(() => {
     setMovie(netflixOriginals[Math.floor(Math.random() * netflixOriginals.length)])
@@ -42,7 +46,12 @@ function Banner({netflixOriginals}: Props) {
 					<PlayArrowIcon className="h-4 w-4 text-black md:h-7 md:w-7" />
 					Play
 				</button>
-				<button className="bannerButton bg-[gray]/70 ">
+				<button 
+				className="bannerButton bg-[gray]/70 "
+				onClick={() => {
+					setCurrentMovie(movie)
+					setShowModal(true)
+				}}>
 					More Info <InfoIcon className="h-5 w-5 md:h-8 md:w-8" />
 				</button>
 			</div>

@@ -2,8 +2,12 @@ import {useState, useEffect} from 'react'
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Link from 'next/link';
+import useAuth from '../hooks/useAuth';
+
 
 function Header() {
+  const { signIn, signUp, logout } = useAuth();
+
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -52,6 +56,7 @@ function Header() {
 				<NotificationsIcon className="h-6 w-6" />
 				<Link href="/account">
 					<img
+					  onClick={logout}
 						src="https://rb.gy/g1pwyx"
 						alt=""
 						className="cursor-pointer rounded"
