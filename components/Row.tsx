@@ -3,10 +3,11 @@ import {Movie} from '../typings'
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import Thumbnail from './Thumbnail';
+import { DocumentData } from 'firebase/firestore';
 
-interface Props { 
-  title: string
-  movies: Movie[]
+interface Props {
+	title: string;
+	movies: Movie[] | DocumentData[];
 }
 
 function Row({title, movies}: Props) {

@@ -3,6 +3,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Link from 'next/link';
 import useAuth from '../hooks/useAuth';
+import BasicMenu from './BasicMenu'
 
 
 function Header() {
@@ -38,7 +39,7 @@ function Header() {
 					alt="logo image"
 				/>
 
-				{/* <BasicMenu /> */}
+				<BasicMenu />
 
 				<ul className="hidden space-x-4 md:flex">
 					<li className="headerLink cursor-default font-semibold text-white hover:text-white">
@@ -56,7 +57,6 @@ function Header() {
 				<NotificationsIcon className="h-6 w-6" />
 				<Link href="/account">
 					<img
-					  onClick={logout}
 						src="https://rb.gy/g1pwyx"
 						alt=""
 						className="cursor-pointer rounded"

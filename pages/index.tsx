@@ -4,13 +4,18 @@ import Image from 'next/image'
 import Header from '../components/Header'
 import Banner from '../components/Banner'
 import Modal from '../components/Modal'
+import Plans from '../components/Plans'
+import payments from '../lib/stripe'
+import {getProducts, Product} from '@stripe/firestore-stripe-payments'
+import useList from '../hooks/useList';
 
 import Row from '../components/Row'
 import requests from '../utils/request'
 import {Movie } from '../typings'
 import useAuth from '../hooks/useAuth';
-import {modalState} from '../atoms/modalAtom'
+import { modalState, movieState } from '../atoms/modalAtom';
 import {useRecoilValue } from 'recoil';
+import useSubscription from '../hooks/useSubscription'
 
 
 
@@ -23,6 +28,7 @@ interface Props {
 	horrorMovies: Movie[];
 	romanceMovies: Movie[];
 	documentaries: Movie[];
+	products:Product[]
 }
 
 const Home = ({
@@ -34,11 +40,16 @@ const Home = ({
 	romanceMovies,
 	topRated,
 	trendingNow,
+	products
 }: Props) => {
-  const { loading } = useAuth();
+  const { loading, user } = useAuth();
 	const showModal = useRecoilValue(modalState)
+	const subscription = useSubscription(user)
+	const list = useList(user?.uid);
+	const movie = useRecoilValue(movieState);
 	
-  if(loading) return 'Loading...'
+  if(loading || subscription === null) return null
+	if(!subscription) return <Plans products={products} />
 
 	return (
 		<div className={`relative h-screen bg-gradient-to-b lg:h-[140vh] ${showModal && "!h-screen overflow-hidden"}`}>
@@ -54,8 +65,8 @@ const Home = ({
 					<Row title="Trending Now" movies={trendingNow} />
 					<Row title="Top Rated" movies={topRated} />
 					<Row title="Action Thrillers" movies={actionMovies} />
-					{/* My List */}
-					{/* {list.length > 0 && <Row title="My List" movies={list} />} */}
+
+					{list.length > 0 && <Row title="My List" movies={list} />}
 
 					<Row title="Comedies" movies={comedyMovies} />
 					<Row title="Scary Movies" movies={horrorMovies} />
@@ -71,6 +82,12 @@ const Home = ({
 export default Home
 
 export const getServerSideProps = async () => {
+	const products = await getProducts(payments, {
+		includePrices: true,
+		activeOnly: true,
+	})
+		.then((res) => res)
+		.catch((error) => console.log(error.message));
   const [
     netflixOriginals,
     trendingNow,
@@ -101,6 +118,7 @@ export const getServerSideProps = async () => {
       horrorMovies: horrorMovies.results,
       romanceMovies: romanceMovies.results,
       documentaries: documentaries.results,
+			products
     },
   }
 }

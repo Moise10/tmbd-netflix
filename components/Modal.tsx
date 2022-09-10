@@ -2,8 +2,6 @@ import { useEffect, useState } from 'react';
 import { useRecoilState } from 'recoil';
 import { modalState, movieState } from '../atoms/modalAtom';
 import ReactPlayer from 'react-player/lazy';
-// import { FaPlay } from 'react-icons/fa';
-// import {PlusIcon,XIcon,} from '@heroicons/react/outline';
 import CheckIcon from '@mui/icons-material/Check';
 import ThumbUpIcon from '@mui/icons-material/ThumbUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
@@ -113,6 +111,7 @@ function Modal() {
 				}
 			);
 		} else {
+			//adding to the list 
 			await setDoc(
 				doc(db, 'customers', user!.uid, 'myList', movie?.id.toString()!),
 				{
